@@ -1,0 +1,44 @@
+*** Settings ***
+Library         Selenium2Library
+Library         String
+
+*** Variables ***
+${Browser}      ie  # Choose browser: ie,chrome,firefox,opera
+${URL_Path}     https://www.google.com.tw  #input url path
+${SearchKeyword}  Hello
+
+*** Test Cases ***
+Open a browser and go to Google website to search a keyword
+  [Documentation]  Starts a website
+  [Tags]  basic
+  When go to Google website
+  And enter keyword to input field
+  And click the search button
+  Then the search result page should contain ${SearchKeyword}
+  [Teardown]  Close Browser
+
+*** Keywords ***
+go to Google website
+  #Set Selenium Timeout  30s
+  Open Browser  ${URL_Path}  ${Browser}
+  Sleep  1s
+  Maximize Browser Window
+  Wait Until Page Contains  Google  60s
+  Capture Page Screenshot
+
+enter keyword to input field
+  Capture Page Screenshot
+  Input Text  id=lst-ib  ${SearchKeyword}
+  sleep  2s
+  Click Element  id=fbar  #Let auto complete message box closed
+  Capture Page Screenshot
+
+click the search button
+  Click Element  name=btnK
+  sleep  2s
+  Capture Page Screenshot
+
+the search result page should contain ${SearchKeyword}
+  sleep  2s
+  Page Should Contain  ${SearchKeyword}
+  Capture Page Screenshot
